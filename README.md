@@ -1,30 +1,34 @@
-# Novexxa Bank — Demo Starter
+# Novexxa Bank — Simulation
 
-A responsive dashboard prototype for **demo/testing only**.
+A banking-style interface for simulation/testing only. It is not a licensed bank and does not move real money.
 
-## Included
-- Responsive dashboard, mobile navigation, and inactive-account indicator.
-- Illustrative USD balance, sample transactions, and a visual-only demo card.
-- Demo transfer and withdrawal request forms with a client-side preview code.
-- Country/provider selector and support-ticket form.
-- Supabase Auth sign-in/sign-up integration.
-- Dedicated Novexxa database tables in the Supabase project `zyloazosnfykpxpjxmuq`:
-  - `novexxa_profiles`
-  - `novexxa_transactions`
-  - `novexxa_transfer_requests`
-  - `novexxa_withdrawal_requests`
-  - `novexxa_support_tickets`
-- Row-level security enabled on all five tables. User-facing policies limit records to the signed-in user's own records; requests are stored as demo/pending only.
+## Implemented
+- Supabase email/password sign-up and sign-in.
+- Separate Novexxa Supabase project: `zyloazosnfykpxpjxmuq`.
+- Dedicated profiles, transaction, transfer-request, withdrawal-request, and support-ticket tables.
+- Unique generated account numbers for new profiles.
+- Admin-only server-side account lookup by account number and updates to simulated balance/status, with audit logging.
+- Four-digit withdrawal PIN hashed server-side.
+- Withdrawal requests require an active demo account and a correct PIN; they enter `verification_required`.
+- Separate employee/admin queue requires an assigned staff account and a six-digit employee code to record verification. Verified requests remain `under_review`.
+- Row-level security on exposed tables; direct client inserts to withdrawal requests are disabled.
+- Demo transfer and support request storage.
 
-## Preview
-Open `index.html` in a browser, or enable GitHub Pages in repository settings and select the `main` branch with the `/(root)` folder.
+## First-time setup still required
+1. Deploy the repository with GitHub Pages or another static host.
+2. Create the owner's user account through the sign-up screen and confirm the email if required.
+3. Assign the owner as admin in Supabase SQL Editor using the verified account email:
+   ```sql
+   insert into novexxa_private.admins (user_id, role)
+   select id, 'admin' from auth.users where email = 'OWNER_EMAIL_HERE'
+   on conflict (user_id) do update set role = 'admin';
+   ```
+4. Assign staff accounts with role `employee` only after their users have registered. Admin can then set their six-digit employee code through the staff tooling/RPC.
+5. Test account creation, PIN setup, admin lookup, and employee verification with demo data.
 
-## Important limitations
-- The preview code `246810` is hardcoded in browser JavaScript and is **not secure**. It is only a UI demonstration and is not used as real authentication.
-- Transfer and withdrawal submissions only create demo requests. No real funds are sent or paid out.
-- The displayed balance and sample transaction history are illustrative and are not read from a real ledger.
-- Do not enter real bank credentials, card details, or sensitive financial information.
-- The public Supabase publishable key is intended for browser use; **never** expose a service-role or secret key in frontend code.
-- Before any production financial use, obtain appropriate licensing/compliance review and implement server-side authorization, secure verification/OTP, fraud controls, audit logging, rate limiting, and a properly maintained ledger.
-
-This is a prototype, not a licensed bank or production financial service.
+## Safety boundaries
+- All balances are simulated. No real transfers, withdrawals, cards, or bank rails are connected.
+- The transfer preview code `246810` is hardcoded and is not secure authentication.
+- The four-digit withdrawal PIN is hashed server-side, but this simulation is not a substitute for production-grade banking security.
+- Never expose a Supabase service-role/secret key in the browser.
+- Security advisor warnings for guarded `SECURITY DEFINER` RPCs are expected to be reviewed; each staff RPC checks the private role table before returning or changing privileged data.
