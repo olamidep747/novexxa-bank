@@ -1,4 +1,4 @@
-# Novexxa Bank — Simulation
+# Novexxa Bank — banking with comfort
 
 A banking-style interface for simulation/testing only. It is not a licensed bank and does not move real money.
 
