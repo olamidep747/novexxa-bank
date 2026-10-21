@@ -23,7 +23,7 @@ A banking-style interface for simulation/testing only. It is not a licensed bank
    select id, 'admin' from auth.users where email = 'OWNER_EMAIL_HERE'
    on conflict (user_id) do update set role = 'admin';
    ```
-4. Assign staff accounts with role `employee` only after their users have registered. Admin can then set their six-digit employee code through the staff tooling/RPC.
+4. From the Admin / Employee page, assign staff by their registered email and set their six-digit employee code. Staff accounts must register first.
 5. Test account creation, PIN setup, admin lookup, and employee verification with demo data.
 
 ## Safety boundaries
