@@ -80,7 +80,7 @@ if(pendingAction==="withdraw"){
 $("modalback").style.display="none";
 if(result.error){toast("Could not save request: "+result.error.message);return}
 toast(pendingAction==="withdraw"?"Demo withdrawal request saved for review. No money was moved.":"Demo transfer request saved for review. No money was moved.");
-});
+};
 
 $("closemodal").onclick=()=>$("modalback").style.display="none";$("modalback").onclick=e=>{if(e.target===$("modalback"))$("modalback").style.display="none"};
 $("showaccount").onclick=()=>toast("Demo account ending 4829 · Status: INACTIVE");$("notifications").onclick=()=>toast("You're all caught up.");$("carddetails").onclick=()=>toast("Demo card only. No payment details are connected.");
