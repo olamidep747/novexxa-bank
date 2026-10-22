@@ -102,12 +102,12 @@ html{scroll-behavior:smooth}body{background:#04122b}
 @media(prefers-reduced-motion:reduce){.nx-mark:after{animation:none!important}}
 
 
-#nxIntro{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:radial-gradient(ellipse at 50% 44%,#102f5c 0%,#07152d 48%,#040b18 100%);animation:nxIntroOut .45s ease 1.55s forwards;pointer-events:none}
-.nx-intro-logo{width:92px;height:92px;border-radius:25px;display:grid;place-items:center;background:linear-gradient(145deg,#0b2b52,#07152a);border:1px solid #4aa5ff66;box-shadow:0 0 55px #168bff36;animation:nxIntroPop .8s cubic-bezier(.2,.8,.2,1) both}
-.nx-intro-logo svg{width:76px;height:76px;overflow:visible}.nx-intro-logo path{stroke-dasharray:150;stroke-dashoffset:150;filter:drop-shadow(0 0 5px #168bff);animation:nxIntroDraw 1.05s cubic-bezier(.2,.8,.2,1) .12s forwards}
-.nx-intro-name{color:#fff;font-size:20px;font-weight:850;letter-spacing:4px;opacity:0;animation:nxIntroText .45s ease .55s forwards}.nx-intro-name span{color:#65bfff}
-.nx-intro-line{width:105px;height:3px;border-radius:5px;background:#16345b;overflow:hidden}.nx-intro-line i{display:block;width:100%;height:100%;background:linear-gradient(90deg,#168bff,#9be6ff);transform:translateX(-100%);animation:nxIntroProgress 1.45s ease forwards}
-@keyframes nxIntroDraw{to{stroke-dashoffset:0}}@keyframes nxIntroPop{0%{opacity:0;transform:scale(.7) rotate(-8deg)}70%{opacity:1;transform:scale(1.06) rotate(2deg)}100%{transform:scale(1) rotate(0)}}@keyframes nxIntroText{to{opacity:1}}@keyframes nxIntroProgress{to{transform:translateX(0)}}@keyframes nxIntroOut{to{opacity:0;visibility:hidden}}
+#nxIntro{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;background:#031b45;animation:nxIntroOut .55s ease 2.85s forwards;pointer-events:none}
+.nx-intro-logo{width:min(48vw,300px);height:min(48vw,300px);display:grid;place-items:center;animation:nxIntroRise .55s cubic-bezier(.2,.8,.2,1) both}
+.nx-intro-logo svg{width:100%;height:100%;overflow:visible}.nx-intro-logo path{stroke-dasharray:150;stroke-dashoffset:150;filter:drop-shadow(0 0 7px #168bff);animation:nxIntroDrawTwice 2.15s cubic-bezier(.55,.05,.25,1) .08s both}
+.nx-intro-name{color:#fff;font-size:clamp(17px,4vw,23px);font-weight:850;letter-spacing:4px;opacity:0;transform:translateY(24px);animation:nxIntroText .55s cubic-bezier(.2,.8,.2,1) 2.05s forwards}.nx-intro-name span{color:#65bfff}
+.nx-intro-line{display:none}
+@keyframes nxIntroDrawTwice{0%{stroke-dashoffset:150;opacity:.25}18%{stroke-dashoffset:0;opacity:1}25%{stroke-dashoffset:0;opacity:1}43%{stroke-dashoffset:150;opacity:.4}50%{stroke-dashoffset:150;opacity:.4}68%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:1}}@keyframes nxIntroRise{0%{opacity:0;transform:translateY(65px) scale(.78)}100%{opacity:1;transform:translateY(0) scale(1)}}@keyframes nxIntroText{to{opacity:1;transform:translateY(0)}}@keyframes nxIntroOut{to{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){#nxIntro,.nx-intro-logo,.nx-intro-logo path,.nx-intro-name,.nx-intro-line i{animation-duration:.01ms!important;animation-delay:0ms!important}}
 </style></head>
 <body>
