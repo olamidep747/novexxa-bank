@@ -647,7 +647,45 @@ function validateSignupStep(step){const value=id=>$(id).value.trim();if(step===1
 function showConfirmation(email,message){pendingConfirmationEmail=email;$("authconfirmation").style.display="block";$("confirmationmessage").textContent=message||("We sent a six-digit confirmation code to "+email+". Enter it below to confirm your account.");$("confirmationcode").value="";$("signinfields").style.display="none";$("signupsteps").style.display="none";$("authsubmit").style.display="none";$("authswitch").style.display="none";$("authnext").style.display="none";$("authprev").style.display="none";$("stepcount").textContent="Email confirmation";$("resendstatus").textContent="";$("authtitle").textContent="Confirm your email";$("authintro").textContent="Enter the code sent to your inbox.";}
 function resetConfirmation(){$("authconfirmation").style.display="none";$("authswitch").style.display="block";$("signinfields").style.display="block";authMode="signin";showAuthMode()}
 $("backtosignin").onclick=resetConfirmation;
-$("verifyconfirmation").onclick=async()=>{const token=$("confirmationcode").value.trim();if(!pendingConfirmationEmail){$("resendstatus").textContent="Please restart sign-up and enter your email address.";return}if(!/^[0-9]{6}$/.test(token)){$("resendstatus").textContent="Enter the six-digit code from your email.";return}const button=$("verifyconfirmation");button.disabled=true;button.textContent="Checking code…";$("resendstatus").textContent="Checking your code securely. This should only take a moment.";try{const result=await Promise.race([supabaseClient.auth.verifyOtp({email:pendingConfirmationEmail,token,type:"signup"}),new Promise((_,reject)=>setTimeout(()=>reject(new Error("The request is taking too long. Check your connection and try again.")),15000))]);const {data,error}=result;if(error){$("resendstatus").textContent="Code verification failed: "+error.message;return}currentUser=data.user||data.session?.user||null;$("authback").style.display="none";if(currentUser){await syncAuth();const pin=$("signuppin")?.value;if(pin&&/^[0-9]{4}$/.test(pin)){const pinResult=await supabaseClient.rpc("novexxa_set_transaction_pin",{p_pin:pin});if(pinResult.error)toast("Email confirmed. Please set your transaction PIN in Settings.");else toast("Email confirmed successfully.");}else toast("Email confirmed successfully. Please sign in.");}else{resetConfirmation();toast("Email confirmed. Please sign in.");}}catch(e){$("resendstatus").textContent=(e&&e.message)||"Could not verify the code. Check your connection and try again.";}finally{button.disabled=false;button.textContent="Verify email";}};
+$("verifyconfirmation").onclick=async()=>{
+ const token=$("confirmationcode").value.trim();
+ if(!pendingConfirmationEmail){$("resendstatus").textContent="Please restart sign-up and enter your email address.";return}
+ if(!/^[0-9]{6}$/.test(token)){$("resendstatus").textContent="Enter the six-digit code from your email.";return}
+ const button=$("verifyconfirmation");button.disabled=true;button.textContent="Checking code…";$("resendstatus").textContent="Checking your code securely. This should only take a moment.";
+ let verifiedUser=null;
+ try{
+   const {data,error}=await supabaseClient.auth.verifyOtp({email:pendingConfirmationEmail,token,type:"signup"});
+   if(error){
+     const msg=String(error.message||"");
+     const lower=msg.toLowerCase();
+     if(lower.includes("expired")||lower.includes("invalid")||lower.includes("otp")){
+       $("resendstatus").textContent="This code has expired, was already used, or was replaced by a newer code. Tap “Resend code”, then enter only the newest six-digit code.";
+     }else if(lower.includes("rate limit")){$("resendstatus").textContent="Too many code attempts. Please wait a little before requesting another code."}
+     else{$("resendstatus").textContent="Code verification failed: "+msg}
+     return;
+   }
+   verifiedUser=data.user||data.session?.user||null;
+   currentUser=verifiedUser;
+   $("authback").style.display="none";
+ }catch(e){
+   const msg=String((e&&e.message)||"");
+   const lower=msg.toLowerCase();
+   $("resendstatus").textContent=lower.includes("expired")||lower.includes("invalid")||lower.includes("otp")?"This code has expired, was already used, or was replaced by a newer code. Tap “Resend code”, then enter only the newest six-digit code.":(msg||"Could not verify the code. Check your connection and try again.");
+   return;
+ }finally{
+   button.disabled=false;button.textContent="Verify email";
+ }
+ if(verifiedUser){
+   try{await syncAuth();}catch(e){console.warn("Post-verification account setup:",e&&e.message)}
+   const pin=$("signuppin")?.value;
+   if(pin&&/^[0-9]{4}$/.test(pin)){
+     try{const pinResult=await supabaseClient.rpc("novexxa_set_transaction_pin",{p_pin:pin});if(pinResult.error)toast("Email confirmed. Please set your transaction PIN in Settings.");else toast("Email confirmed successfully.");}
+     catch(e){toast("Email confirmed. Please set your transaction PIN in Settings.");}
+   }else toast("Email confirmed successfully. You can now sign in.");
+ }else{
+   resetConfirmation();toast("Email confirmed. Please sign in.");
+ }
+};
 $("resendconfirmation").onclick=async()=>{if(!pendingConfirmationEmail){$("resendstatus").textContent="Please restart sign-up and enter your email address.";return}const button=$("resendconfirmation");button.disabled=true;button.textContent="Sending…";$("resendstatus").textContent="Requesting a fresh code…";try{const {error}=await Promise.race([supabaseClient.auth.resend({type:"signup",email:pendingConfirmationEmail}),new Promise((_,reject)=>setTimeout(()=>reject(new Error("The request timed out. Please check your connection and try again.")),15000))]);$("resendstatus").textContent=error?("Could not resend code: "+error.message):"If the address is eligible, a new code has been requested. Check your inbox and spam folder.";}catch(e){$("resendstatus").textContent=(e&&e.message)||"Could not resend the code. Please try again.";}finally{button.disabled=false;button.textContent="Resend code";}};
 function showAuthMode(){const signingIn=authMode==="signin";$("authconfirmation").style.display="none";$("authswitch").style.display="block";$("authtitle").textContent=signingIn?"Welcome back":"Create your account";$("authintro").textContent=signingIn?"Sign in with your email and password.":"Enter your details below to get started."; $("signupTrust").style.display="none";$("signinfields").style.display=signingIn?"block":"none";$("signupsteps").style.display=signingIn?"none":"block";$("authsubmit").textContent=signingIn?"Sign in":"Create account";$("authswitch").textContent=signingIn?"New here? Create an account":"Already have an account? Sign in";signupStep=1;renderSignupStep()}
 $("authswitch").onclick=()=>{authMode=authMode==="signin"?"signup":"signin";showAuthMode()};
