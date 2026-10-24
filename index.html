@@ -363,7 +363,45 @@ html{scroll-behavior:auto}
  #authback .signup-nav button{padding:9px 12px}
 }
 
-</style></head>
+</style>
+<style id="novexxa-support-chat-refresh">
+/* Standard customer-support messenger */
+.nx-chat-launch{right:20px;bottom:20px;z-index:10010;min-height:54px;padding:10px 17px;border:0;border-radius:13px;background:#145bd7;color:#fff;box-shadow:0 8px 24px #0a102a24;gap:10px;font-size:13px;font-weight:700}
+.nx-chat-launch .nx-chat-icon{width:30px;height:30px;border-radius:9px;background:#ffffff20}
+.nx-chat-panel{right:20px;bottom:84px;width:min(370px,calc(100vw - 28px));height:min(560px,calc(100dvh - 112px));max-height:calc(100dvh - 112px);border:1px solid #dce3ed;border-radius:16px;background:#fff;color:#18243a;box-shadow:0 18px 55px #0a102a30}
+.nx-chat-head{flex-shrink:0;display:flex;align-items:center;gap:11px;padding:16px;background:#fff;color:#15233c;border-bottom:1px solid #e8edf4}
+.nx-chat-avatar{width:40px;height:40px;flex:0 0 40px;border-radius:11px;background:#eaf1ff;color:#145bd7;box-shadow:none;font-size:18px}
+.nx-chat-headcopy{flex:1;min-width:0}.nx-chat-headcopy strong{display:block;font-size:14px;font-weight:750;letter-spacing:0}.nx-chat-headcopy small{display:flex;align-items:center;gap:6px;margin-top:4px;color:#718096;font-size:11px}.nx-chat-headcopy small i{width:7px;height:7px;border-radius:50%;background:#22a06b}
+.nx-chat-close{margin-left:auto;width:32px;height:32px;border:0;border-radius:9px;background:#f1f4f8;color:#5d6b80;font-size:21px}
+.nx-chat-body{padding:16px;gap:12px;background:#f7f9fc;scroll-behavior:smooth}
+.nx-chat-day{padding:4px 0 2px;color:#8a95a6;font-size:10px;letter-spacing:.7px}
+.nx-chat-msg{max-width:86%;padding:11px 12px 8px;border:1px solid #e3e8f0;border-radius:12px 12px 12px 4px;background:#fff;box-shadow:0 1px 2px #0a102a08;color:#26354a;font-size:13px;line-height:1.55}
+.nx-chat-msg.user{align-self:flex-end;border:0;border-radius:12px 12px 4px 12px;background:#145bd7;color:#fff;box-shadow:none}
+.nx-chat-sender{display:block;margin-bottom:4px;color:#145bd7;font-size:10px;font-weight:750}
+.nx-chat-quick{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0}.nx-chat-quick button{padding:8px 10px;border:1px solid #d4dfef;border-radius:9px;background:#fff;color:#234b91;font-size:11px;font-weight:650;box-shadow:none}
+.nx-chat-form{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:12px;background:#fff;border-top:1px solid #e8edf4}
+.nx-chat-form input#nxChatInput{height:42px;min-width:0;border:1px solid #dce3ed;border-radius:10px;background:#fff;padding:0 12px;color:#18243a;font-size:13px}
+.nx-chat-form input#nxChatInput:focus{outline:none;border-color:#7ca3ee;box-shadow:0 0 0 3px #145bd710}
+.nx-chat-attach{width:36px;height:36px;flex:0 0 36px;border:1px solid #e1e7f0;border-radius:10px;background:#f7f9fc;color:#536781;font-size:21px}
+.nx-chat-form button[type=submit]{width:40px;height:40px;flex:0 0 40px;border:0;border-radius:10px;background:#145bd7;color:#fff;font-size:16px;box-shadow:none}
+.nx-chat-attachment-preview,.nx-chat-footnote{background:#fff}.nx-chat-footnote{padding:0 12px 10px;color:#8994a5;font-size:10px}
+@media(max-width:480px){.nx-chat-launch{right:14px;bottom:14px;padding:9px 12px;min-height:48px}.nx-chat-panel{right:8px;bottom:72px;width:calc(100vw - 16px);height:min(72dvh,580px);max-height:calc(100dvh - 88px);border-radius:15px}}
+</style>
+
+<style id="novexxa-header-scroll-style">
+/* Keep the brand readable when the sticky header changes on scroll */
+.nx-header{transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease}
+.nx-header .nx-brand,.nx-header .nx-brand em{transition:color .18s ease}
+.nx-header.nx-header-scrolled{background:#0A102A!important;border-bottom-color:#26334d!important;box-shadow:0 5px 20px #02081724!important}
+.nx-header.nx-header-scrolled .nx-brand,.nx-header.nx-header-scrolled .nx-brand em{color:#fff!important}
+.nx-header.nx-header-scrolled .nx-brand small{color:#c4d0e5!important}
+.nx-header.nx-header-scrolled .nx-nav a{color:#d7e1f1!important}
+.nx-header.nx-header-scrolled .nx-nav a:hover{color:#FFD84D!important}
+.nx-header.nx-header-scrolled .nx-menu-toggle{background:#17233d;border-color:#34425d}
+.nx-header.nx-header-scrolled .nx-menu-toggle span{background:#fff}
+@media(max-width:700px){.nx-header.nx-header-scrolled .nx-nav{background:#0A102A;border-color:#26334d}.nx-header.nx-header-scrolled .nx-nav a{border-bottom-color:#26334d}}
+</style>
+</head>
 <body>
 <section class="nx-home" id="nxHome">
 <header class="nx-wrap nx-header">
@@ -640,7 +678,11 @@ async function loadPendingWithdrawals(){if(!currentUser){$("pendingwithdrawals")
 $("refreshwithdrawals").onclick=loadPendingWithdrawals;$("setownstaffcode").onclick=async()=>{const code=$("ownstaffcode").value.trim();if(!/^[0-9]{4}$/.test(code)){$("ownstaffstatus").textContent="Choose exactly four digits.";return}const {error}=await supabaseClient.rpc("novexxa_admin_set_own_staff_code",{p_code:code});if(error){$("ownstaffstatus").textContent=error.message;return}$("ownstaffcode").value="";$("ownstaffstatus").textContent="Administrator code saved. Enter it in the identity check above to continue.";toast("Administrator staff code saved securely.")};$("staffaccessbtn").onclick=async()=>{const code=$("staffaccesscode").value.trim();if(!/^[0-9]{4}$/.test(code)){$("staffaccessstatus").textContent="Enter exactly four digits.";return}const {data,error}=await supabaseClient.rpc("novexxa_employee_verify_access",{p_code:code});if(error||data!==true){$("staffaccessstatus").textContent=error?error.message:"Code not accepted. Check the code and try again.";return}staffConsoleUnlocked=true;$("staffaccesscode").value="";$("staffaccessstatus").textContent="Identity verified.";go("admin");toast("Staff identity verified.");};
 $("addemployee").onclick=async()=>{const email=$("employeeemail").value.trim(),code=$("employeecode").value.trim();if(!email||!/^[0-9]{4}$/.test(code)){toast("Enter the registered employee email and a four-digit staff identity code.");return}const {error}=await supabaseClient.rpc("novexxa_admin_add_employee",{p_email:email,p_code:code});if(error){toast(error.message);return}$("employeeemail").value="";$("employeecode").value="";toast("Employee access saved.")};
 renderInternationalMethods();renderTransactions("recent");renderHistory();
-</script></body></html>
+</script>
+<script id="novexxa-header-scroll-color">
+(()=>{const header=document.querySelector('.nx-header');if(!header)return;const update=()=>header.classList.toggle('nx-header-scrolled',window.scrollY>24);update();window.addEventListener('scroll',update,{passive:true});})();
+</script>
+</body></html>
 <style>.nx-mark-image{display:block;width:42px;height:42px;flex:0 0 42px;object-fit:contain;border-radius:13px}.nx-brand{gap:12px}.nx-brand small{letter-spacing:.1px;color:#71819a}@media(max-width:700px){.nx-mark-image{width:36px;height:36px;flex-basis:36px}}</style>
 
 <style>
