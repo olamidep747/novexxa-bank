@@ -715,7 +715,7 @@ const providers={
 let selectedProvider="",selectedInternationalMethod="",pendingAction="",authMode="signin",currentUser=null,pendingConfirmationEmail="",staffConsoleUnlocked=false;
 const SUPABASE_URL="https://zyloazosnfykpxpjxmuq.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_J8r63wGAaElkYxi7vZX0VQ_zydDYpYh";
-const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:"novexxa-bank-auth-v1"}});
+const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 
 const $=id=>document.getElementById(id);
 let toastTimeout;function toast(msg,type){const el=$("toast");if(!el)return;clearTimeout(toastTimeout);const kind=type||(/^(Signed in\.|Signed out\.|Account created\.|Your four-digit PIN was saved securely\.|Employee verification recorded\.|Identity verified\.|Transaction PIN saved securely\.|Account details updated and logged\.)/i.test(String(msg))?"success":(/\b(failed|error|could not|couldn\x27t|unavailable|timed out|not accepted|rejected|invalid|unable)\b/i.test(String(msg))?"error":"info"));el.textContent=msg;el.dataset.kind=kind;el.style.display="block";toastTimeout=setTimeout(()=>{el.style.display="none"},5000)}
