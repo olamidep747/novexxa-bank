@@ -892,6 +892,14 @@ renderInternationalMethods();renderTransactions("recent");renderHistory();
 @keyframes nxGlobalSpin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.nx-loading-spinner{animation-duration:1.8s}}
 </style>
+<script id="nx-runtime-error-guard">
+(()=>{if(window.__nxRuntimeGuardInstalled)return;window.__nxRuntimeGuardInstalled=true;
+function show(message){try{let box=document.getElementById('nx-runtime-error');if(!box){box=document.createElement('div');box.id='nx-runtime-error';box.style.cssText='position:fixed;z-index:2147483647;left:12px;right:12px;bottom:12px;padding:14px 16px;background:#fff1f0;border:1px solid #e5a29e;border-radius:12px;color:#7f1d1d;font:13px/1.5 system-ui;box-shadow:0 8px 28px #0002;overflow-wrap:anywhere';document.body.appendChild(box)}box.textContent='Novexxa page error: '+String(message||'Unknown JavaScript error').slice(0,500)}catch(_){}}
+window.addEventListener('error',e=>{if(e.message)show(e.message+' ('+(e.filename||'script')+':'+(e.lineno||'?')+')')});
+window.addEventListener('unhandledrejection',e=>{const reason=e.reason;show(reason?.message||reason||'Unhandled promise rejection')});
+window.addEventListener('load',()=>{if(!window.supabase?.createClient)show('The Supabase library did not load. Check the internet connection or CDN access, then refresh.')});
+})();
+</script>
 <script id="nx-global-loading-core">
 (()=>{if(window.__nxGlobalLoadingInstalled)return;window.__nxGlobalLoadingInstalled=true;
 const spinner='<span class="nx-loading-spinner" aria-hidden="true"></span>';
