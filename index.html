@@ -721,6 +721,29 @@ renderInternationalMethods();renderTransactions("recent");renderHistory();
 <script id="novexxa-header-scroll-color">
 (()=>{const header=document.querySelector('.nx-header');if(!header)return;const update=()=>header.classList.toggle('nx-header-scrolled',window.scrollY>24);update();window.addEventListener('scroll',update,{passive:true});})();
 </script>
+<style id="nx-global-loading-styles">
+.nx-loading-inline{display:inline-flex!important;align-items:center;justify-content:center;gap:9px;pointer-events:none;opacity:.82!important;cursor:wait!important}
+.nx-loading-spinner{width:16px;height:16px;display:inline-block;flex:0 0 16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:nxGlobalSpin .7s linear infinite}
+.nx-loading-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(8,16,38,.18);backdrop-filter:blur(2px)}
+.nx-loading-overlay[hidden]{display:none}
+.nx-loading-card{display:flex;align-items:center;gap:12px;background:#fff;color:#17233d;padding:16px 20px;border-radius:14px;box-shadow:0 12px 45px #06112c30;font:600 14px Inter,system-ui,sans-serif}
+.nx-loading-card .nx-loading-spinner{width:22px;height:22px;flex-basis:22px}
+@keyframes nxGlobalSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.nx-loading-spinner{animation-duration:1.8s}}
+</style>
+<script id="nx-global-loading-core">
+(()=>{if(window.__nxGlobalLoadingInstalled)return;window.__nxGlobalLoadingInstalled=true;
+const spinner='<span class="nx-loading-spinner" aria-hidden="true"></span>';
+function targetButton(target){if(target instanceof HTMLButtonElement)return target;if(target instanceof HTMLFormElement)return target.querySelector('button[type="submit"],button:not([type])');return null}
+function start(btn,label){if(!btn||btn.dataset.nxBusy==='1')return null;btn.dataset.nxBusy='1';btn.dataset.nxOriginalHtml=btn.innerHTML;btn.dataset.nxWasDisabled=btn.disabled?'1':'0';btn.disabled=true;btn.classList.add('nx-loading-inline');btn.setAttribute('aria-busy','true');btn.innerHTML=spinner+'<span>'+(label||btn.dataset.loadingText||'Please wait…')+'</span>';return ()=>{if(!btn.isConnected)return;btn.innerHTML=btn.dataset.nxOriginalHtml||btn.innerHTML;btn.disabled=btn.dataset.nxWasDisabled==='1';delete btn.dataset.nxBusy;delete btn.dataset.nxOriginalHtml;delete btn.dataset.nxWasDisabled;btn.classList.remove('nx-loading-inline');btn.removeAttribute('aria-busy')}}
+function wrap(owner,prop){const fn=owner&&owner[prop];if(typeof fn!=='function'||fn.__nxLoadingWrapped||fn.constructor.name!=='AsyncFunction')return;const wrapped=async function(ev){const btn=targetButton(this);const done=start(btn,btn?.dataset.loadingText);try{return await fn.call(this,ev)}catch(err){console.error('Action failed:',err);const toast=document.getElementById('toast');if(toast){toast.textContent=err?.message||'Something went wrong. Please try again.';toast.style.display='block'}return undefined}finally{if(done)done()}};wrapped.__nxLoadingWrapped=true;owner[prop]=wrapped}
+function scan(){document.querySelectorAll('button').forEach(btn=>wrap(btn,'onclick'));document.querySelectorAll('form').forEach(form=>wrap(form,'onsubmit'))}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',scan,{once:true});else scan();
+new MutationObserver(()=>scan()).observe(document.documentElement,{childList:true,subtree:true});
+const original=EventTarget.prototype.addEventListener;EventTarget.prototype.addEventListener=function(type,listener,options){if((type==='click'||type==='submit')&&typeof listener==='function'&&!listener.__nxLoadingWrapped){const target=this;const wrapped=function(ev){let result;try{result=listener.call(this,ev)}catch(err){throw err}if(!result||typeof result.then!=='function')return result;const btn=targetButton(target);const done=start(btn,btn?.dataset.loadingText);return Promise.resolve(result).catch(err=>{console.error('Async action failed:',err);const toast=document.getElementById('toast');if(toast){toast.textContent=err?.message||'Something went wrong. Please try again.';toast.style.display='block'}}).finally(()=>{if(done)done()})};wrapped.__nxLoadingWrapped=true;return original.call(this,type,wrapped,options)}return original.call(this,type,listener,options)};
+window.nxRunLoadingAction=async function(btn,action,label){const done=start(btn,label);try{return await action()}finally{if(done)done()}};
+})();
+</script>
 </body></html>
 <style>.nx-mark-image{display:block;width:42px;height:42px;flex:0 0 42px;object-fit:contain;border-radius:13px}.nx-brand{gap:12px}.nx-brand small{letter-spacing:.1px;color:#71819a}@media(max-width:700px){.nx-mark-image{width:36px;height:36px;flex-basis:36px}}</style>
 
