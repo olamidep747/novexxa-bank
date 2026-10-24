@@ -707,7 +707,7 @@ if(result.error){const detail=String(result.error.message||"").toLowerCase();let
 if(result.data.session){clearSignupFeedback();await syncAuth();const pinResult=await supabaseClient.rpc("novexxa_set_transaction_pin",{p_pin:pin});if(pinResult.error){toast("Account created, but PIN setup needs attention. Open Settings to set it securely.");}else{toast("Account created. Your four-digit PIN was saved securely.");} $("authback").style.display="none";return}
 showConfirmation(email,"An six-digit confirmation code has been requested for "+email+". Enter the code below to confirm your email. Your account will remain inactive pending approval.");};
 if(supabaseClient){supabaseClient.auth.onAuthStateChange(()=>{setTimeout(()=>syncAuth(),0)});syncAuth()}
-supabaseClient?.auth.onAuthStateChange(()=>{activeConversationId=null;loadSupportHistory();});
+
 
 $("savepin").onclick=async()=>{const pin=$("newpin").value;if(!/^[0-9]{4}$/.test(pin)){toast("Choose exactly four digits.");return}if(!currentUser){toast("Sign in first.");return}const {error}=await supabaseClient.rpc("novexxa_set_transaction_pin",{p_pin:pin});if(error){toast(error.message);return}$("newpin").value="";toast("Transaction PIN saved securely.")};
 let foundAccount=null;
