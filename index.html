@@ -937,7 +937,21 @@ window.nxRunLoadingAction=async function(btn,action,label){const done=start(btn,
 
 <style id="novexxa-auth-cleanup">#authback .nx-auth-switch{display:none!important}#authback #signupTrust{display:none!important}#authback .signup-step .field{margin-bottom:12px}#authback #authsubmit{width:100%;min-height:48px}#authback #authswitch{display:block;text-align:center;background:transparent;color:#2854b8;border:0;margin:8px auto 0;cursor:pointer}#authback .stepper{gap:6px}#authback .stepchip{font-size:10px;line-height:1.35}#authback .authmodal{width:min(620px,100%)}
 </style>
-\n<style id="novexxa-auth-navigation-guard">#authback #authsubmit{touch-action:manipulation;-webkit-tap-highlight-color:transparent}</style>\n
+\n<style id="novexxa-login-spinner-reliability">
+#authback #authsubmit{position:relative;display:flex;align-items:center;justify-content:center;gap:10px;min-height:50px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#authback #authsubmit:disabled{opacity:.82;cursor:wait;transform:none}
+#authback .nx-auth-spinner{width:18px;height:18px;flex:0 0 18px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:nxAuthSpin .7s linear infinite}
+@keyframes nxAuthSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){#authback .nx-auth-spinner{animation-duration:1.4s}}
+</style>
+<script id="novexxa-login-tap-reliability">
+(()=>{const byId=id=>document.getElementById(id);function setSignInMode(){const sw=byId('authswitch');if(sw&&/create an account/i.test(sw.textContent)){sw.click()}else{const submit=byId('authsubmit');if(submit)submit.textContent='Sign in'}}
+document.addEventListener('click',event=>{const button=event.target.closest('#nxAuthSignin');if(button){event.preventDefault();const modal=byId('authback');if(modal)modal.style.display='grid';setTimeout(setSignInMode,0)}},true);
+document.addEventListener('keydown',event=>{if(event.key!=='Enter'||event.isComposing)return;const target=event.target;if(!target||!['authemail','authpassword'].includes(target.id))return;event.preventDefault();const submit=byId('authsubmit');if(submit&&!submit.disabled)submit.click()});
+window.addEventListener('pageshow',()=>{const submit=byId('authsubmit');if(submit&&submit.dataset.busy!=='1'){submit.disabled=false;submit.innerHTML='Sign in'}});
+})();
+</script>
+<style id="novexxa-auth-navigation-guard">#authback #authsubmit{touch-action:manipulation;-webkit-tap-highlight-color:transparent}</style>\n
 <style id="novexxa-remove-prototype-banner">.nx-prototype-notice{display:none!important}</style>
 
 <style id="novexxa-account-opening-upgrade">
