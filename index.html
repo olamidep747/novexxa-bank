@@ -808,6 +808,70 @@ html{scroll-behavior:smooth;scroll-padding-top:82px}body{font-family:Inter,ui-sa
 @media(max-width:700px){.nx-wrap{width:calc(100% - 32px)}.nx-header{height:64px;min-height:64px;flex-wrap:nowrap;padding:0}.nx-brand{font-size:17px;gap:8px}.nx-brand small{display:none}.nx-menu-toggle{display:flex}.nx-actions .nx-btn{min-height:42px;padding:10px 12px;font-size:12px}.nx-nav{display:none;position:absolute;top:63px;left:0;right:0;background:#fff;border:1px solid #E8EBF0;border-radius:0 0 16px 16px;padding:12px 16px;box-shadow:0 18px 35px #0A102A15;align-items:stretch;gap:0}.nx-nav.nx-nav-open{display:grid}.nx-nav a{padding:12px 6px;font-size:13px;border-bottom:1px solid #E8EBF0}.nx-nav a:last-child{border-bottom:0}.nx-hero{grid-template-columns:1fr;gap:8px;padding:48px 0 36px;min-height:unset}.nx-hero h1{font-size:clamp(43px,11vw,58px);letter-spacing:-2px}.nx-hero p{font-size:14px;line-height:1.75}.nx-hero-ctas{display:grid;grid-template-columns:1fr;gap:10px}.nx-hero-ctas .nx-btn{width:100%;min-height:56px}.nx-stats{margin-top:26px;gap:0 18px}.nx-stats strong{font-size:24px}.nx-visual{min-height:355px;margin-top:8px}.nx-bank-art-card{width:min(315px,83%)}.nx-card-float{width:155px;right:-2px;bottom:6px;padding:13px}.nx-card-float b{font-size:13px}.nx-section{padding:58px 0}.nx-global-grid,.nx-fees-grid,.nx-security-grid,.nx-faq-grid,.nx-loans{grid-template-columns:1fr;gap:25px}.nx-security-grid .nx-shield-art{order:2}.nx-shield-art{min-height:265px}.nx-shield-orbit{width:215px;height:215px}.nx-shield{width:135px;height:158px}.nx-shield-lock{font-size:52px}.nx-products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.nx-product{padding:16px 13px;min-height:180px}.nx-product h3{font-size:13px}.nx-product p{font-size:11px}.nx-loanlist{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.nx-loan{padding:15px}.nx-support-band{padding:24px;display:grid}.nx-support-band .nx-btn{width:100%}.nx-cta{padding:25px;display:grid}.nx-cta .nx-btn{width:100%}.nx-footer-inner{grid-template-columns:1fr;gap:20px}.nx-footer-inner>div:last-child{grid-column:auto}.nx-footer-links{gap:12px}}
 @media(max-width:390px){.nx-wrap{width:calc(100% - 26px)}.nx-brand{font-size:15px}.nx-mark-image{width:34px;height:34px;flex-basis:34px}.nx-actions{gap:7px}.nx-actions .nx-btn{font-size:11px;padding:9px}.nx-hero h1{font-size:42px}.nx-products{grid-template-columns:1fr}.nx-product{min-height:unset}.nx-card-float{right:-4px;width:138px}.nx-card-float b{font-size:12px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.nx-btn{transition:none}}
+
+/* Novexxa dashboard refinement */
+#app{background:#f4f7fc;color:#18243d;min-height:100vh;--dash-blue:#1769e8;--dash-line:#e7edf6}
+#app .sidebar{background:linear-gradient(180deg,#071a38 0%,#0b2146 60%,#102b53 100%);padding:25px 16px;box-shadow:8px 0 30px #06152b12;border-right:1px solid #ffffff0c}
+#app .brand{padding:0 9px 32px;letter-spacing:-.65px}
+#app .brand .mark{background:linear-gradient(145deg,#fff,#cfe0ff);color:#1556c7;box-shadow:0 5px 16px #0002}
+#app .nav{gap:7px}
+#app .nav button{position:relative;display:flex;align-items:center;gap:5px;min-height:45px;border:1px solid transparent;color:#b9c9e4;padding:11px 13px;border-radius:12px;font-size:13px;font-weight:600;transition:all .18s ease}
+#app .nav button span{flex-shrink:0;width:25px;font-size:16px}
+#app .nav button.active{background:linear-gradient(100deg,#1769e8,#2554bc);color:#fff;box-shadow:0 7px 18px #00112e45;border-color:#78aaff33}
+#app .nav button:hover:not(.active){background:#ffffff0d;color:#fff;transform:translateX(2px)}
+#app .status{background:linear-gradient(145deg,#132c52,#102442);border:1px solid #ffffff16;border-radius:15px;box-shadow:inset 0 1px #ffffff08}
+#app .main{min-height:100vh;padding:28px clamp(18px,3vw,42px) 46px;background:linear-gradient(180deg,#f9fbff 0%,#f3f6fc 100%);max-width:none}
+#app .top{position:relative;padding:4px 0 21px;margin-bottom:26px;border-bottom:1px solid #e4eaf4}
+#app .top h1{font-size:clamp(24px,2.1vw,31px);font-weight:800;color:#12213e;letter-spacing:-1.1px}
+#app .top .eyebrow{color:#7888a4;font-size:10px;letter-spacing:1.45px}
+#app .topright{gap:10px}
+#app .topright .iconbtn,#app .authbtn{border-radius:12px;padding:10px 14px;font-size:12px;font-weight:700;box-shadow:0 3px 12px #142b4d08}
+#app .topright .iconbtn{border-color:#e2e9f4;background:#fff;color:#344765}
+#app .topright .iconbtn:hover{background:#f2f6ff;border-color:#b9ccf7}
+#app .authbtn{background:linear-gradient(135deg,#2679f0,#1956cc);box-shadow:0 5px 14px #1769e826}
+#app .authstate{max-width:220px;color:#60708c}
+#app .grid{gap:18px}
+#app .card{border:1px solid #e7edf6;border-radius:19px;background:rgba(255,255,255,.96);padding:22px;box-shadow:0 8px 28px #18365d08;transition:box-shadow .2s ease,border-color .2s ease,transform .2s ease}
+#app .card:hover{box-shadow:0 13px 32px #18365d0d;border-color:#dbe5f4}
+#app .balance{background:radial-gradient(ellipse at 95% 0%,#4e7fe1 0%,transparent 38%),linear-gradient(130deg,#10264b 0%,#163c78 60%,#2058b0 100%);border-color:#244d8e;box-shadow:0 14px 34px #163a741e}
+#app .balance:hover{box-shadow:0 17px 38px #163a7427}
+#app .balance .eyebrow{color:#c5d8fb}
+#app .amount{font-size:clamp(30px,3vw,40px);font-weight:800;letter-spacing:-1.4px;margin:15px 0 3px}
+#app .balance .actions{margin-top:24px;gap:10px}
+#app .balance .primary,#app .balance .secondary{border-radius:11px;padding:11px 16px}
+#app .balance .primary{color:#163b7a;background:#fff;box-shadow:0 4px 14px #00112e20}
+#app .balance .secondary{background:#ffffff18;border:1px solid #ffffff30;color:#fff}
+#app .metricline .eyebrow{font-size:10px;letter-spacing:1.1px}
+#app .miniicon{border-radius:13px;background:#eef4ff;color:#2364d8;box-shadow:inset 0 0 0 1px #dce8ff}
+#app .metric{color:#17294a;font-variant-numeric:tabular-nums}
+#app .section{margin-top:27px}
+#app .sectionhead{margin-bottom:14px}
+#app .sectionhead h2{font-size:17px;font-weight:800;color:#1b2b49;letter-spacing:-.4px}
+#app .sectionhead .link{padding:8px 10px;border-radius:9px}
+#app .sectionhead .link:hover{background:#eaf1ff}
+#app .transaction{padding:15px 2px;border-color:#edf1f7}
+#app .txicon{border-radius:13px;background:linear-gradient(145deg,#f0f5ff,#e8efff);color:#285ec6}
+#app .txname{font-size:13px;color:#203252}
+#app .txmeta{color:#7b8aa3}
+#app .bankoption{border-color:#e5ebf5;border-radius:14px;padding:13px;box-shadow:0 3px 12px #1a345606}
+#app .bankoption:hover,#app .bankoption.selected{border-color:#86a6f8;background:#f6f9ff;box-shadow:0 0 0 3px #3e72e90c}
+#app .banklogo{border-radius:12px;background:linear-gradient(145deg,#eaf1ff,#dce8ff);color:#2258c9}
+#app .page.active{animation:dashFadeIn .22s ease both!important}
+#app .notice{border-radius:14px;background:#fff9ec;border-color:#f4e4bf;color:#79541a}
+#app .field input,#app .field select,#app .field textarea{border-radius:12px;border-color:#dfe7f2;padding:12px 13px}
+#app .field input:focus,#app .field select:focus,#app .field textarea:focus{border-color:#78a1f7;box-shadow:0 0 0 4px #2875ef12}
+#app .primary,#app .secondary{border-radius:11px;font-weight:750}
+#app .primary{background:linear-gradient(135deg,#2b7af0,#1b56cb);box-shadow:0 4px 12px #1d5bd51c}
+#app .primary:hover{box-shadow:0 7px 18px #1d5bd52b;transform:translateY(-1px)}
+#app .secondary{background:#edf3ff;color:#2356bd}
+#app .tablewrap{border:1px solid #e9eef6;border-radius:13px;overflow:auto}
+#app .table th{background:#f8faff}
+#app .page>.card{box-shadow:0 10px 30px #193a6509}
+@keyframes dashFadeIn{from{opacity:.7;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:1000px){#app .main{padding:22px 22px 36px}}
+@media(max-width:720px){#app .sidebar{box-shadow:15px 0 45px #06152b35}#app .main{padding:15px 14px 30px}#app .top{gap:10px;margin-bottom:19px;padding-bottom:15px}#app .topright{gap:7px;flex-wrap:wrap;justify-content:flex-end}#app .authstate{max-width:112px;font-size:10px}#app .topright .iconbtn,#app .authbtn{padding:9px 10px}#app .card{padding:17px;border-radius:16px}#app .section{margin-top:21px}#app .balance .actions button{flex:1}}
+@media(prefers-reduced-motion:reduce){#app .page.active{animation:none!important}#app .nav button,#app .card,#app .primary{transition:none!important}}
+
 </style>
 <script id="novexxa-home-menu">
 (()=>{const menu=document.getElementById('nxMenuToggle'),nav=document.getElementById('nxMainNav');if(!menu||!nav)return;menu.addEventListener('click',()=>{const open=nav.classList.toggle('nx-nav-open');menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu')});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('nx-nav-open');menu.setAttribute('aria-expanded','false')}));})();
