@@ -1,1 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#123e78"/><stop offset="1" stop-color="#071b36"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#b)"/><path d="M15 46V18c0-3 3.6-4.2 5.6-1.8L43.4 46c2 2.4 5.6 1.2 5.6-1.8V18" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 17.5 44 46.5" fill="none" stroke="#8dcaff" stroke-width="1.5" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Novexxa mark">
+<defs><linearGradient id="nx" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#244DAA"/><stop offset="1" stop-color="#1A3A8F"/></linearGradient><linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF3B0"/><stop offset="1" stop-color="#FFD84D"/></linearGradient></defs>
+<rect width="64" height="64" rx="15" fill="url(#nx)"/>
+<path d="M14 44V20c0-3 3-4 5-1.5L43 45c2 2 5 1 5-2V20" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M19 18.5 44 45" fill="none" stroke="url(#gold)" stroke-width="2.5" stroke-linecap="round"/>
+<circle cx="49" cy="15" r="4" fill="#FFD84D"/>
+</svg>
