@@ -695,10 +695,10 @@ document.querySelectorAll('[data-nx-question]').forEach(b=>b.addEventListener('c
 <script>
 function showTacRequiredPopup(){const el=$("tacrequiredback");if(el)el.style.display="grid"}
 function closeTacRequiredPopup(){const el=$("tacrequiredback");if(el)el.style.display="none"}
-$("tacrequiredclose")?.addEventListener("click",closeTacRequiredPopup);
-$("taccancelwithdrawal")?.addEventListener("click",closeTacRequiredPopup);
-$("tacrequiredback")?.addEventListener("click",e=>{if(e.target===$("tacrequiredback"))closeTacRequiredPopup()});
-$("tacmessagesupport")?.addEventListener("click",()=>{closeTacRequiredPopup();const nav=document.querySelector('[data-go="support"]');if(nav)nav.click();else toast("Open Support from the navigation menu to contact the team.")});
+document.getElementById("tacrequiredclose")?.addEventListener("click",closeTacRequiredPopup);
+document.getElementById("taccancelwithdrawal")?.addEventListener("click",closeTacRequiredPopup);
+document.getElementById("tacrequiredback")?.addEventListener("click",e=>{if(e.target===$("tacrequiredback"))closeTacRequiredPopup()});
+document.getElementById("tacmessagesupport")?.addEventListener("click",()=>{closeTacRequiredPopup();const nav=document.querySelector('[data-go="support"]');if(nav)nav.click();else toast("Open Support from the navigation menu to contact the team.")});
 let transactions=[];
 function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));}
 function formatDemoAmount(value,currency="USD"){return new Intl.NumberFormat("en-US",{style:"currency",currency:/^[A-Z]{3}$/.test(currency||"")?currency:"USD"}).format(Number(value)||0);}
