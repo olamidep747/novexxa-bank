@@ -460,8 +460,26 @@ html{scroll-behavior:auto}
 <style id="nx-auth-loading-fix">#authback #authsubmit{display:flex;align-items:center;justify-content:center;gap:10px}#authback #authsubmit:disabled{opacity:.78;cursor:wait}.nx-auth-spinner{width:17px;height:17px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;display:inline-block;animation:nxAuthSpin .7s linear infinite}@keyframes nxAuthSpin{to{transform:rotate(360deg)}}</style>
 <style id="novexxa-toast-status">#toast[data-kind="success"]{background:#e7f8ee!important;border:1px solid #a7e2bd!important;color:#176b3a!important;box-shadow:0 8px 24px #176b3a18!important}#toast[data-kind="error"]{background:#fff0f0!important;border:1px solid #f2b6b6!important;color:#a52121!important}#toast[data-kind="info"]{background:#edf4ff!important;border:1px solid #c5d8fb!important;color:#204c91!important}</style>
 <style id="nx-admin-attachment-link-style">.nx-admin-attachment-link{display:block;margin:8px 0;padding:9px 11px;border:1px solid #dce5f0;border-radius:9px;background:#f6f8fc;color:#145bd7;text-decoration:none;font-size:12px;overflow-wrap:anywhere}.nx-admin-message img{max-width:220px;max-height:180px;object-fit:contain}</style>
+
+<style id="nx-entry-loader-style">
+#nx-entry-loader{position:fixed;inset:0;z-index:2147483646;display:flex;align-items:center;justify-content:center;background:#fff;opacity:1;visibility:visible;transition:opacity .28s ease,visibility .28s ease}
+#nx-entry-loader.nx-entry-loader-leaving{opacity:0;visibility:hidden;pointer-events:none}
+.nx-entry-loader-ring{position:relative;width:68px;height:68px;border-radius:50%;background:conic-gradient(from 18deg,transparent 0deg,#159b8b 20deg,#159b8b 95deg,transparent 112deg,transparent 165deg,#e8c84d 190deg,#e8c84d 250deg,transparent 270deg,transparent 360deg);animation:nxEntryRotate 1.45s linear infinite;filter:drop-shadow(0 0 7px #179b8b20)}
+.nx-entry-loader-ring:before{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}
+.nx-entry-loader-core{position:absolute;left:50%;top:50%;width:12px;height:12px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 38% 35%,#d8fff7 0,#65cbbd 42%,#148f83 76%);box-shadow:0 0 0 7px #159b8b0d,0 0 16px #159b8b35}
+@keyframes nxEntryRotate{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.nx-entry-loader-ring{animation-duration:3s}}
+</style>
 </head>
 <body>
+
+<div id="nx-entry-loader" role="status" aria-label="Loading">
+  <div class="nx-entry-loader-ring" aria-hidden="true"><span class="nx-entry-loader-core"></span></div>
+</div>
+<script id="nx-entry-loader-script">
+(()=>{const loader=document.getElementById('nx-entry-loader');if(!loader)return;const dismiss=()=>{window.setTimeout(()=>{loader.classList.add('nx-entry-loader-leaving');window.setTimeout(()=>loader.remove(),320)},2400)};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',dismiss,{once:true});else dismiss()})();
+</script>
+
 <section class="nx-home" id="nxHome">
 <header class="nx-wrap nx-header">
   <a class="nx-brand nx-gateway" href="#nxHome" id="nxLogoGateway" aria-label="Novexxa Bank home"><img class="nx-mark-image" src="novexxa-mark.svg" alt="" width="42" height="42"><span>Novexxa <em>Bank</em><small>Banking for a brighter tomorrow</small></span></a>
