@@ -876,9 +876,12 @@ $("verifybtn").onclick=async()=>{
    $("modalback").style.display="none";
    if(error){toast(error.message);return}
    latestTacWithdrawalId=data;
-   savePendingTacWithdrawal(data);
+   savePendingTacWithdrawal(data,"swift");
    showTacRequiredPopup();
-   $("verificationcode").value="";return;
+   $("verificationcode").value="";
+   await loadCustomerActivity(currentUser.id);
+   toast("Withdrawal request saved. Continue with SWIFT code verification.");
+   return;
  }
  if(pendingAction==="transfer"){
    const result=await supabaseClient.from("novexxa_transfer_requests").insert({user_id:currentUser.id,recipient_name:$("recipient").value.trim(),recipient_account_masked:$("iban").value.trim()?("••••"+$("iban").value.trim().slice(-4)):null,amount:Number($("transferamount").value),note:$("note").value.trim()||null,status:"pending",is_demo:true});
