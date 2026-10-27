@@ -1255,5 +1255,77 @@ html{scroll-behavior:smooth;scroll-padding-top:82px}body{font-family:Inter,ui-sa
  document.addEventListener('keydown',event=>{if(event.key!=='Escape')return;const visible=Array.from(document.querySelectorAll('.modalback')).reverse().find(el=>getComputedStyle(el).display!=='none');if(visible&&visible.id!=='tacrequiredback'){visible.style.display='none';if(visible.id==='modalback'){const field=document.querySelector('#verificationcode')?.closest('.field');if(field)field.style.display=''}}closeMobileNav();const homeNav=document.getElementById('nxMainNav'),homeMenu=document.getElementById('nxMenuToggle');if(homeNav?.classList.contains('nx-nav-open')){homeNav.classList.remove('nx-nav-open');homeMenu?.setAttribute('aria-expanded','false');homeMenu?.setAttribute('aria-label','Open navigation menu')}if(document.getElementById('nxChatPanel')?.classList.contains('open'))document.getElementById('nxChatClose')?.click()});
 })();
 </script>
+
+<style id="nx-support-notifications-style">
+#app .nx-admin-tabs button.nx-has-unread{position:relative}
+#app .nx-admin-tabs button.nx-has-unread::after{content:"";position:absolute;right:5px;top:5px;width:10px;height:10px;border-radius:50%;background:#e52e45;border:2px solid #fff;box-shadow:0 0 0 2px #e52e4520}
+#app .nx-chat-conversation{position:relative;padding-right:35px}
+#app .nx-chat-conversation .nx-chat-unread-dot{position:absolute;right:13px;top:17px;width:10px;height:10px;border-radius:50%;background:#e52e45;box-shadow:0 0 0 3px #ffe8eb}
+#app .nx-chat-conversation .nx-chat-account-title{display:block;font-size:12px;font-weight:800;color:#182b49;padding-right:2px;overflow-wrap:anywhere}
+#app .nx-chat-conversation .nx-chat-preview{margin-top:5px}
+#nx-support-notification-toast{position:fixed;z-index:2147483000;right:18px;top:18px;width:min(370px,calc(100vw - 36px));padding:14px 16px;border-radius:14px;background:#10264a;color:#fff;box-shadow:0 14px 38px #07152b40;display:none;border:1px solid #29436c}
+#nx-support-notification-toast strong{display:block;font-size:13px;margin-bottom:4px}
+#nx-support-notification-toast span{display:block;font-size:12px;line-height:1.45;color:#d9e5f7;overflow-wrap:anywhere}
+#nx-support-notification-toast button{margin-top:9px;border:0;border-radius:8px;background:#fff;color:#145bd7;padding:7px 10px;font-size:11px;font-weight:800}
+@media(max-width:700px){#nx-support-notification-toast{top:10px;right:10px;width:calc(100vw - 20px)}}
+</style>
+<div id="nx-support-notification-toast" role="status" aria-live="polite"><strong>New support message</strong><span id="nx-support-notification-copy"></span><button id="nx-support-notification-open" type="button">Open conversation</button></div>
+<script id="nx-support-notifications-runtime">
+(()=> {
+ if(window.__nxSupportNotificationsInstalled)return;window.__nxSupportNotificationsInstalled=true;
+ const $id=id=>document.getElementById(id);
+ const seenKey=id=>'nx_support_seen_'+id;
+ const seenAt=id=>{try{return Number(localStorage.getItem(seenKey(id))||0)}catch(_){return 0}};
+ const saveSeen=(id,stamp)=>{try{localStorage.setItem(seenKey(id),String(Math.max(seenAt(id),Number(stamp)||0)))}catch(_){}};
+ let baselineReady=false,lastSnapshot=new Map(),toastTimer=null,pendingOpenId=null;
+ function accountLabel(c){const name=String(c.display_name||c.customer_email||'Customer').trim();const account=String(c.account_number||'Account number unavailable').trim();return account&&account!=='Account number unavailable'?name+' · '+account:name+' · '+account}
+ function unread(c){return c.last_sender_role==='customer'&&Number(new Date(c.last_message_at||c.updated_at||0).getTime())>seenAt(c.conversation_id)}
+ function showToast(c){const toast=$id('nx-support-notification-toast');if(!toast)return;pendingOpenId=c.conversation_id;$id('nx-support-notification-copy').textContent=accountLabel(c)+': '+String(c.last_message||'Sent a new message').slice(0,180);toast.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.style.display='none',10000);
+   try{if('Notification'in window&&Notification.permission==='granted'){const n=new Notification('New Novexxa support message',{body:accountLabel(c)+': '+String(c.last_message||'Sent a new message').slice(0,140),tag:'nx-chat-'+c.conversation_id});n.onclick=()=>{window.focus();openConversationFromNotice(c.conversation_id);n.close()}}}catch(_){}
+ }
+ function openConversationFromNotice(id){$id('nx-support-notification-toast').style.display='none';if(typeof nxSetAdminView==='function')nxSetAdminView('support');if(typeof openAdminChat==='function')openAdminChat(id)}
+ $id('nx-support-notification-open')?.addEventListener('click',()=>{if(pendingOpenId)openConversationFromNotice(pendingOpenId)});
+ async function updateIndicators(){
+   const tab=document.querySelector('[data-admin-view="support"]');const list=$id('nx-chat-conversation-list');
+   if(typeof nxAdminChats==='undefined'||!Array.isArray(nxAdminChats))return;
+   const chats=nxAdminChats;
+   const unreadChats=chats.filter(unread);
+   tab?.classList.toggle('nx-has-unread',unreadChats.length>0);
+   if(tab)tab.setAttribute('aria-label','Support chat'+(unreadChats.length?' ('+unreadChats.length+' unread conversations)':''));
+   const count=$id('nx-chat-count');if(count)count.textContent=String(chats.length);
+   if(list){list.querySelectorAll('[data-chat-id]').forEach(btn=>{const c=chats.find(x=>x.conversation_id===btn.dataset.chatId);if(!c)return;
+     const strong=btn.querySelector('strong');if(strong){strong.className='nx-chat-account-title';strong.textContent=accountLabel(c)}
+     const small=btn.querySelector('small');if(small)small.textContent=(c.customer_email||'Customer account')+' · '+(c.last_message_at?new Date(c.last_message_at).toLocaleString():'');
+     const existing=btn.querySelector('.nx-chat-unread-dot');if(unread(c)){if(!existing){const dot=document.createElement('span');dot.className='nx-chat-unread-dot';dot.setAttribute('aria-label','Unread customer message');dot.title='Unread customer message';btn.appendChild(dot)}btn.setAttribute('aria-label',accountLabel(c)+', unread message')}else{existing?.remove();btn.setAttribute('aria-label',accountLabel(c))}
+   })}
+ }
+ const baseLoad=window.loadAdminChats;
+ if(typeof baseLoad==='function'){
+   window.loadAdminChats=async function(){
+     const before=lastSnapshot;
+     await baseLoad.apply(this,arguments);
+     const chats=typeof nxAdminChats!=='undefined'&&Array.isArray(nxAdminChats)?nxAdminChats:[];
+     if(baselineReady){
+       for(const c of chats){const stamp=new Date(c.last_message_at||c.updated_at||0).getTime();const old=before.get(c.conversation_id)||0;if(c.last_sender_role==='customer'&&stamp>old&&stamp>seenAt(c.conversation_id)){showToast(c);break}}
+     }
+     lastSnapshot=new Map(chats.map(c=>[c.conversation_id,new Date(c.last_message_at||c.updated_at||0).getTime()]));
+     baselineReady=true;await updateIndicators();
+   };
+ }
+ const baseOpen=window.openAdminChat;
+ if(typeof baseOpen==='function'){
+   window.openAdminChat=async function(id){
+     const result=await baseOpen.apply(this,arguments);
+     const c=(typeof nxAdminChats!=='undefined'?nxAdminChats:[]).find(x=>x.conversation_id===id);
+     if(c)saveSeen(id,new Date(c.last_message_at||c.updated_at||0).getTime());
+     await updateIndicators();return result;
+   };
+ }
+ document.querySelector('[data-admin-view="support"]')?.addEventListener('click',()=>{try{if('Notification'in window&&Notification.permission==='default')Notification.requestPermission()}catch(_){}});
+ if(!window.__nxSupportPollingTimer)window.__nxSupportPollingTimer=setInterval(()=>{if(typeof staffConsoleUnlocked!=='undefined'&&staffConsoleUnlocked&&document.visibilityState!=='prerender'&&typeof loadAdminChats==='function')loadAdminChats()},15000);
+ document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&typeof staffConsoleUnlocked!=='undefined'&&staffConsoleUnlocked&&typeof loadAdminChats==='function')loadAdminChats()});
+})();
+</script>
+
 </body>
 </html>
