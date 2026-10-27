@@ -1306,7 +1306,7 @@ html{scroll-behavior:smooth;scroll-padding-top:82px}body{font-family:Inter,ui-sa
      await baseLoad.apply(this,arguments);
      const chats=typeof nxAdminChats!=='undefined'&&Array.isArray(nxAdminChats)?nxAdminChats:[];
      if(baselineReady){
-       for(const c of chats){const stamp=new Date(c.last_message_at||c.updated_at||0).getTime();const old=before.get(c.conversation_id)||0;if(c.last_sender_role==='customer'&&stamp>old&&stamp>seenAt(c.conversation_id)){showToast(c);break}}
+       for(const c of chats){const stamp=new Date(c.last_message_at||c.updated_at||0).getTime();const old=before.get(c.conversation_id)||0;if(c.last_sender_role==='customer'&&stamp>old){showToast(c);break}}
      }
      lastSnapshot=new Map(chats.map(c=>[c.conversation_id,new Date(c.last_message_at||c.updated_at||0).getTime()]));
      baselineReady=true;await updateIndicators();
