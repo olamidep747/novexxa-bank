@@ -804,7 +804,8 @@ const providers={
 "Other country":[["Revolut","Availability depends on residence"],["PayPal","Availability depends on country"],["Wise","Availability depends on country"],["International bank transfer","Availability depends on bank"]]
 };
 
-let selectedProvider="",selectedInternationalMethod="",pendingAction="",authMode="signin",currentUser=null,pendingConfirmationEmail="",staffConsoleUnlocked=false,returnToWithdrawForPin=false;
+var staffConsoleUnlocked=false;
+let selectedProvider="",selectedInternationalMethod="",pendingAction="",authMode="signin",currentUser=null,pendingConfirmationEmail="",returnToWithdrawForPin=false;
 const SUPABASE_URL="https://zyloazosnfykpxpjxmuq.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_J8r63wGAaElkYxi7vZX0VQ_zydDYpYh";
 const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
