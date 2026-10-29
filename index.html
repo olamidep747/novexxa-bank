@@ -813,7 +813,18 @@ var staffConsoleUnlocked=false;
 let selectedProvider="",selectedInternationalMethod="",pendingAction="",authMode="signin",currentUser=null,pendingConfirmationEmail="",returnToWithdrawForPin=false;
 const SUPABASE_URL="https://zyloazosnfykpxpjxmuq.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_J8r63wGAaElkYxi7vZX0VQ_zydDYpYh";
-let supabaseClient=null;try{if(window.supabase&&typeof window.supabase.createClient==="function")supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(error){console.error("Novexxa Supabase initialization failed:",error)}
+let supabaseClient=null;
+const nxCreateSupabaseClient=createClient=>createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+let supabaseClientReady=(async()=>{
+  try{
+    if(window.supabase&&typeof window.supabase.createClient==="function")supabaseClient=nxCreateSupabaseClient(window.supabase.createClient);
+    else {
+      const mod=await import("https://esm.sh/@supabase/supabase-js@2");
+      if(typeof mod.createClient==="function")supabaseClient=nxCreateSupabaseClient(mod.createClient);
+    }
+  }catch(error){console.error("Novexxa Supabase initialization failed:",error)}
+  return supabaseClient;
+})();
 
 const $=id=>document.getElementById(id);
 let toastTimeout;function hideToast(){const el=$("toast");if(!el)return;clearTimeout(toastTimeout);el.style.display="none";el.textContent="";}function toast(msg,type){const el=$("toast");if(!el)return;clearTimeout(toastTimeout);const kind=type||(/^(Signed in\\.|Signed out\\.|Account created\\.|Your four-digit PIN was saved securely\\.|Employee verification recorded\\.|Identity verified\\.|Transaction PIN saved securely\\.|Account details updated and logged\\.)/i.test(String(msg))?"success":(/\\b(failed|error|could not|couldn\\x27t|unavailable|timed out|not accepted|rejected|invalid|unable)\\b/i.test(String(msg))?"error":"info"));el.textContent=msg+"  ×";el.dataset.kind=kind;el.style.display="block";el.style.cursor="pointer";el.onclick=hideToast;toastTimeout=setTimeout(hideToast,4500)}
@@ -1107,7 +1118,18 @@ window.nxRunLoadingAction=async function(btn,action,label){const done=start(btn,
 <script id="novexxa-signin-capture-fix">
 (()=> {
   const byId=id=>document.getElementById(id);
-  document.addEventListener('click',event=>{
+  document.addEventListener('click',async event=>{
+    const switchButton=event.target&&event.target.closest?event.target.closest('#authswitch'):null;
+    if(switchButton){
+      event.preventDefault();event.stopImmediatePropagation();
+      try{
+        authMode=authMode==="signin"?"signup":"signin";
+        showAuthMode();
+        const feedback=byId('signinfedback')||byId('signupfeedback');
+        if(feedback){feedback.textContent='';feedback.style.display='none'}
+      }catch(error){console.error('Auth mode switch failed:',error)}
+      return;
+    }
     const button=event.target&&event.target.closest?event.target.closest('#authsubmit'):null;
     if(!button)return;
     event.preventDefault();
@@ -1125,8 +1147,13 @@ window.nxRunLoadingAction=async function(btn,action,label){const done=start(btn,
       if(!email||!password){show('Enter your email address and password.','error');return;}
       let client;
       try { client=typeof supabaseClient!=='undefined'?supabaseClient:null; } catch(_) { client=null; }
+      if(!client){
+        show('Loading secure sign-in service…','success');
+        try{client=await Promise.race([supabaseClientReady,new Promise((_,reject)=>setTimeout(()=>reject(new Error('Authentication service timed out. Check your connection.')),12000))]);}
+        catch(error){show('Secure sign-in service failed to load. Check your connection and try again.','error');return;}
+      }
       if(!client||!client.auth||typeof client.auth.signInWithPassword!=='function'){
-        show('Sign-in could not initialize because the secure authentication service did not load. Please try again shortly.','error');return;
+        show('Secure sign-in service is unavailable. Please try again shortly.','error');return;
       }
       button.disabled=true;button.dataset.busy='1';
       button.innerHTML='<span class="nx-auth-spinner" aria-hidden="true"></span> Signing in…';
