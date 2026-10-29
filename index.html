@@ -537,7 +537,7 @@ html{scroll-behavior:auto}
 (function(){
 const home=document.getElementById('nxHome'), app=document.getElementById('app');
 function openAccount(){app.classList.add('nx-open');window.scrollTo({top:0,behavior:'instant'});}
-function openAuth(mode){authMode=mode;showAuthMode();const b=document.getElementById('authback');if(b)b.style.display='grid';}
+function openAuth(mode){window.setTimeout(()=>{try{authMode=mode;showAuthMode();const b=document.getElementById('authback');if(b)b.style.display='grid';}catch(error){console.error('Novexxa authentication UI error:',error);const message=document.getElementById('nxPageError');if(message)message.textContent='Authentication interface is still loading. Please try again.';}},0);}
 const nxIntro=document.getElementById('nxIntro');if(nxIntro){window.setTimeout(()=>nxIntro.remove(),2050)}
 const nxAuthSignup=document.getElementById('nxAuthSignup');if(nxAuthSignup)nxAuthSignup.addEventListener('click',()=>openAuth('signup'));
 const nxAuthSignin=document.getElementById('nxAuthSignin');if(nxAuthSignin)nxAuthSignin.addEventListener('click',()=>openAuth('signin'));
