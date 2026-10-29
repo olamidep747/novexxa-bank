@@ -731,6 +731,11 @@ document.querySelectorAll('[data-nx-question]').forEach(b=>b.addEventListener('c
 <button class="primary full" id="authsubmit" type="button">Sign in</button><button class="link full" style="margin-top:12px" id="authswitch">Need an account? Create one</button><p class="authhint">Use your own email and password. Never share your password or transaction PIN with staff.</p></div></div>
 <div class="toast" id="toast"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script id="nx-supabase-cdn-fallback">
+if(!window.supabase||typeof window.supabase.createClient!=='function'){
+ document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\\/script>');
+}
+</script>
 <style id="nx-withdraw-verification-scroll-fix">
 /* Keep the withdrawal verification dialog usable on short screens and phones. */
 #tacrequiredback{position:fixed;inset:0;display:none;place-items:center;overflow-y:auto;overscroll-behavior:contain;padding:20px 14px;align-items:start}
@@ -808,7 +813,7 @@ var staffConsoleUnlocked=false;
 let selectedProvider="",selectedInternationalMethod="",pendingAction="",authMode="signin",currentUser=null,pendingConfirmationEmail="",returnToWithdrawForPin=false;
 const SUPABASE_URL="https://zyloazosnfykpxpjxmuq.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_J8r63wGAaElkYxi7vZX0VQ_zydDYpYh";
-const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+let supabaseClient=null;try{if(window.supabase&&typeof window.supabase.createClient==="function")supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})}catch(error){console.error("Novexxa Supabase initialization failed:",error)}
 
 const $=id=>document.getElementById(id);
 let toastTimeout;function hideToast(){const el=$("toast");if(!el)return;clearTimeout(toastTimeout);el.style.display="none";el.textContent="";}function toast(msg,type){const el=$("toast");if(!el)return;clearTimeout(toastTimeout);const kind=type||(/^(Signed in\\.|Signed out\\.|Account created\\.|Your four-digit PIN was saved securely\\.|Employee verification recorded\\.|Identity verified\\.|Transaction PIN saved securely\\.|Account details updated and logged\\.)/i.test(String(msg))?"success":(/\\b(failed|error|could not|couldn\\x27t|unavailable|timed out|not accepted|rejected|invalid|unable)\\b/i.test(String(msg))?"error":"info"));el.textContent=msg+"  ×";el.dataset.kind=kind;el.style.display="block";el.style.cursor="pointer";el.onclick=hideToast;toastTimeout=setTimeout(hideToast,4500)}
