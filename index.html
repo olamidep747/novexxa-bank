@@ -816,14 +816,20 @@ const SUPABASE_PUBLISHABLE_KEY="sb_publishable_J8r63wGAaElkYxi7vZX0VQ_zydDYpYh";
 let supabaseClient=null;
 const nxCreateSupabaseClient=createClient=>createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 let supabaseClientReady=(async()=>{
-  try{
-    if(window.supabase&&typeof window.supabase.createClient==="function")supabaseClient=nxCreateSupabaseClient(window.supabase.createClient);
-    else {
-      const mod=await import("https://esm.sh/@supabase/supabase-js@2");
-      if(typeof mod.createClient==="function")supabaseClient=nxCreateSupabaseClient(mod.createClient);
-    }
-  }catch(error){console.error("Novexxa Supabase initialization failed:",error)}
-  return supabaseClient;
+  const attempts=[
+    async()=>window.supabase&&typeof window.supabase.createClient==="function"?window.supabase.createClient:null,
+    async()=>(await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm")).createClient,
+    async()=>(await import("https://esm.sh/@supabase/supabase-js@2")).createClient,
+    async()=>(await import("https://unpkg.com/@supabase/supabase-js@2?module")).createClient
+  ];
+  for(const load of attempts){
+    try{
+      const createClient=await load();
+      if(typeof createClient==="function"){supabaseClient=nxCreateSupabaseClient(createClient);return supabaseClient;}
+    }catch(error){console.warn("Supabase library source failed:",String(error&&error.message||error));}
+  }
+  console.error("Novexxa Supabase initialization failed: all browser library sources failed.");
+  return null;
 })();
 
 const $=id=>document.getElementById(id);
@@ -1123,7 +1129,9 @@ window.nxRunLoadingAction=async function(btn,action,label){const done=start(btn,
     if(switchButton){
       event.preventDefault();event.stopImmediatePropagation();
       try{
-        authMode=authMode==="signin"?"signup":"signin";
+        const title=byId('authtitle');
+        const currentlySignin=title?title.textContent.toLowerCase().includes('welcome back'):authMode==='signin';
+        authMode=currentlySignin?'signup':'signin';
         showAuthMode();
         const feedback=byId('signinfedback')||byId('signupfeedback');
         if(feedback){feedback.textContent='';feedback.style.display='none'}
