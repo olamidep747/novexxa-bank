@@ -1099,6 +1099,36 @@ window.nxRunLoadingAction=async function(btn,action,label){const done=start(btn,
 @keyframes nxAuthSpin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){#authback .nx-auth-spinner{animation-duration:1.4s}}
 </style>
+<script id="novexxa-signin-capture-fix">
+(()=> {
+  const byId=id=>document.getElementById(id);
+  document.addEventListener('click',event=>{
+    const button=event.target&&event.target.closest?event.target.closest('#authsubmit'):null;
+    if(!button)return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const feedback=byId('signupfeedback');
+    const show=(message,type='error')=>{
+      if(feedback){feedback.className='signup-feedback '+type;feedback.textContent=message;feedback.style.display='block'}
+    };
+    if(button.disabled||button.dataset.busy==='1')return;
+    show('Sign-in button tapped. Checking your details…','success');
+    const handler=button.onclick;
+    if(typeof handler!=='function'){
+      show('The sign-in action did not initialize. Please refresh the page and try again.','error');
+      return;
+    }
+    try {
+      const result=handler.call(button,event);
+      if(result&&typeof result.catch==='function')result.catch(error=>{
+        show('Sign-in could not start: '+String(error&&error.message||error),'error');
+      });
+    } catch(error) {
+      show('Sign-in could not start: '+String(error&&error.message||error),'error');
+    }
+  },true);
+})();
+</script>
 <script id="novexxa-login-tap-reliability">
 (()=>{const byId=id=>document.getElementById(id);function setSignInMode(){const sw=byId('authswitch');if(sw&&/create an account/i.test(sw.textContent)){sw.click()}else{const submit=byId('authsubmit');if(submit)submit.textContent='Sign in'}}
 document.addEventListener('click',event=>{const button=event.target.closest('#nxAuthSignin');if(button){event.preventDefault();const modal=byId('authback');if(modal)modal.style.display='grid';setTimeout(setSignInMode,0)}},true);
