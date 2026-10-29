@@ -1115,7 +1115,22 @@ window.nxRunLoadingAction=async function(btn,action,label){const done=start(btn,
     show('Sign-in button tapped. Checking your details…','success');
     const handler=button.onclick;
     if(typeof handler!=='function'){
-      show('The sign-in action did not initialize. Please refresh the page and try again.','error');
+      const email=byId('authemail')?.value?.trim()||'';
+      const password=byId('authpassword')?.value||'';
+      if(!email||!password){show('Enter your email address and password.','error');return;}
+      let client;
+      try { client=typeof supabaseClient!=='undefined'?supabaseClient:null; } catch(_) { client=null; }
+      if(!client||!client.auth||typeof client.auth.signInWithPassword!=='function'){
+        show('Sign-in could not initialize because the secure authentication service did not load. Please try again shortly.','error');return;
+      }
+      button.disabled=true;button.dataset.busy='1';
+      button.innerHTML='<span class="nx-auth-spinner" aria-hidden="true"></span> Signing in…';
+      show('Connecting securely…','success');
+      Promise.race([client.auth.signInWithPassword({email,password}),new Promise((_,reject)=>setTimeout(()=>reject(new Error('The sign-in request timed out. Check your connection and try again.')),15000))]).then(result=>{
+        if(result.error){show('Sign-in failed: '+String(result.error.message||'Please check your details.'),'error');return;}
+        if(!result.data||!result.data.user){show('Sign-in did not return an account. Please try again.','error');return;}
+        show('Sign-in successful. Opening your account…','success');window.location.reload();
+      }).catch(error=>show('Sign-in error: '+String(error&&error.message||error),'error')).finally(()=>{button.disabled=false;button.dataset.busy='0';button.textContent='Sign in';});
       return;
     }
     try {
